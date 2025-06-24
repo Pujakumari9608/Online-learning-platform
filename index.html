@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnFlow - Your Online Learning Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for eye-friendly theme */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Soft off-white background */
+            color: #334155; /* Dark gray for body text */
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        /* Custom scrollbar for better aesthetics and less distraction */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0; /* Light gray track */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8; /* Muted blue-gray thumb */
+            border-radius: 10px;
+            border: 2px solid #e2e8f0; /* Match track color */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* Slightly darker on hover */
+        }
+
+        /* Hero section background animation (subtle) */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .hero-gradient {
+            background: linear-gradient(270deg, #e0f2f7, #e6e9f0, #e0f2f7);
+            background-size: 600% 600%;
+            animation: gradientShift 10s ease infinite;
+        }
+
+        /* Transition for interactive elements */
+        .transition-all-ease {
+            transition: all 0.3s ease-in-out;
+        }
+        .text-gradient {
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-graduation-cap text-indigo-500 text-2xl"></i>
+                <a href="index.html" class="text-3xl font-bold text-gray-800 tracking-tight">Learn<span class="text-indigo-600">Flow</span></a>
+            </div>
+            <!-- Navigation (visible on larger screens) -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-600 hover:text-indigo-600 font-medium transition-all-ease">Home</a>
+                <a href="#courses" class="text-gray-600 hover:text-indigo-600 font-medium transition-all-ease">Courses</a>
+                <a href="#about" class="text-gray-600 hover:text-indigo-600 font-medium transition-all-ease">About Us</a>
+                <a href="#contact" class="text-gray-600 hover:text-indigo-600 font-medium transition-all-ease">Contact</a>
+            </nav>
+            <!-- Auth Buttons / User Icon -->
+            <div class="flex items-center space-x-4">
+                <!-- User not logged in -->
+                <a href="login.html" id="login-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-full shadow-md transition-all-ease hidden">Login</a>
+                <a href="login.html" id="register-button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-full shadow-md transition-all-ease hidden">Register</a>
+                
+                <!-- User logged in -->
+                <div id="user-profile" class="relative group hidden">
+                    <button class="flex items-center space-x-2 bg-indigo-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-indigo-600 transition-all-ease">
+                        <i class="fas fa-user-circle text-xl"></i>
+                        <span id="username-display" class="font-medium">Student</span>
+                        <i class="fas fa-chevron-down text-sm ml-1"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all-ease origin-top-right scale-95 group-hover:scale-100">
+                        <a href="dashboard.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100" id="logout-button"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Navigation (hidden by default) -->
+        <nav id="mobile-menu" class="hidden md:hidden px-4 py-2 bg-white shadow-md">
+            <a href="index.html" class="block py-2 text-gray-700 hover:bg-gray-100 rounded-md px-3 font-medium">Home</a>
+            <a href="#courses" class="block py-2 text-gray-700 hover:bg-gray-100 rounded-md px-3 font-medium">Courses</a>
+            <a href="#about" class="block py-2 text-gray-700 hover:bg-gray-100 rounded-md px-3 font-medium">About Us</a>
+            <a href="#contact" class="block py-2 text-gray-700 hover:bg-gray-100 rounded-md px-3 font-medium">Contact</a>
+            <hr class="my-2 border-gray-200">
+            <a href="login.html" class="block py-2 text-indigo-600 hover:bg-indigo-50 rounded-md px-3 font-medium">Login / Register</a>
+        </nav>
+    </header>
+
+    <!-- Main Content Area - This will change based on the page -->
+    <main id="main-content" class="flex-grow">
+        <!-- Home Page Content -->
+        <section id="home-page" class="py-16 hero-gradient text-center">
+            <div class="container mx-auto px-4">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6 animate-fade-in-up">
+                    Unlock Your Potential with <span class="text-gradient">LearnFlow</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto animate-fade-in">
+                    Dive into a world of knowledge with engaging video lessons, interactive quizzes, and seamless progress tracking.
+                </p>
+                <a href="#featured-courses" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-full text-lg shadow-xl inline-block transform hover:scale-105 transition-all-ease animate-bounce-in">
+                    Explore Courses <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Featured Courses Section (Home Page) -->
+        <section id="featured-courses" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-gray-800 text-center mb-12">Popular Courses</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Course Card 1 -->
+                    <div class="bg-gray-50 rounded-xl shadow-lg hover:shadow-xl transition-all-ease overflow-hidden">
+                        <img src="https://placehold.co/600x350/E0F2F7/334155?text=Web+Development" alt="Web Development Course" class="w-full h-48 object-cover rounded-t-xl">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Complete Web Development Bootcamp</h3>
+                            <p class="text-gray-600 text-sm mb-4">Master HTML, CSS, JavaScript, React, Node.js, and Databases to build modern web applications.</p>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-indigo-600 font-bold">Beginner to Advanced</span>
+                                <span class="text-gray-500 text-sm"><i class="fas fa-clock mr-1"></i>40 Hours</span>
+                            </div>
+                            <a href="#" class="block w-full text-center bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-full transition-all-ease">View Course</a>
+                        </div>
+                    </div>
+                    <!-- Course Card 2 -->
+                    <div class="bg-gray-50 rounded-xl shadow-lg hover:shadow-xl transition-all-ease overflow-hidden">
+                        <img src="https://placehold.co/600x350/E0F2F7/334155?text=Data+Science" alt="Data Science Course" class="w-full h-48 object-cover rounded-t-xl">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Introduction to Data Science with Python</h3>
+                            <p class="text-gray-600 text-sm mb-4">Learn data analysis, visualization, and machine learning essentials using Python.</p>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-indigo-600 font-bold">Intermediate</span>
+                                <span class="text-gray-500 text-sm"><i class="fas fa-clock mr-1"></i>30 Hours</span>
+                            </div>
+                            <a href="#" class="block w-full text-center bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-full transition-all-ease">View Course</a>
+                        </div>
+                    </div>
+                    <!-- Course Card 3 -->
+                    <div class="bg-gray-50 rounded-xl shadow-lg hover:shadow-xl transition-all-ease overflow-hidden">
+                        <img src="https://placehold.co/600x350/E0F2F7/334155?text=Graphic+Design" alt="Graphic Design Course" class="w-full h-48 object-cover rounded-t-xl">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold text-gray-900 mb-2">Graphic Design Masterclass: From Zero to Hero</h3>
+                            <p class="text-gray-600 text-sm mb-4">Unleash your creativity and master tools like Photoshop, Illustrator, and InDesign.</p>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-indigo-600 font-bold">All Levels</span>
+                                <span class="text-gray-500 text-sm"><i class="fas fa-clock mr-1"></i>25 Hours</span>
+                            </div>
+                            <a href="#" class="block w-full text-center bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-full transition-all-ease">View Course</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="#" class="bg-white border-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50 font-bold py-3 px-8 rounded-full text-lg shadow-md inline-block transform hover:scale-105 transition-all-ease">
+                        Browse All Courses <i class="fas fa-chevron-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Page Content (Initially hidden, will be rendered by JS) -->
+        <section id="login-page" class="hidden py-16">
+            <div class="container mx-auto px-4 flex justify-center items-center h-full">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-8">Welcome Back!</h2>
+                    <form id="login-form" class="space-y-6">
+                        <div>
+                            <input type="email" id="login-email" placeholder="Email Address"
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700" required>
+                        </div>
+                        <div>
+                            <input type="password" id="login-password" placeholder="Password"
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700" required>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow-md transition-all-ease">
+                            Login <i class="fas fa-sign-in-alt ml-2"></i>
+                        </button>
+                    </form>
+                    <p class="mt-6 text-gray-600">Don't have an account? <a href="#" id="show-register-form" class="text-indigo-600 hover:underline">Register Here</a></p>
+                    <div id="login-message" class="mt-4 text-sm font-medium text-red-600 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registration Page Content (Initially hidden, will be rendered by JS) -->
+        <section id="register-page" class="hidden py-16">
+            <div class="container mx-auto px-4 flex justify-center items-center h-full">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-8">Join LearnFlow Today!</h2>
+                    <form id="register-form" class="space-y-6">
+                        <div>
+                            <input type="text" id="register-username" placeholder="Full Name"
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700" required>
+                        </div>
+                        <div>
+                            <input type="email" id="register-email" placeholder="Email Address"
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700" required>
+                        </div>
+                        <div>
+                            <input type="password" id="register-password" placeholder="Password"
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700" required>
+                        </div>
+                        <div>
+                            <input type="password" id="register-confirm-password" placeholder="Confirm Password"
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700" required>
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow-md transition-all-ease">
+                            Register <i class="fas fa-user-plus ml-2"></i>
+                        </button>
+                    </form>
+                    <p class="mt-6 text-gray-600">Already have an account? <a href="#" id="show-login-form" class="text-indigo-600 hover:underline">Login Here</a></p>
+                    <div id="register-message" class="mt-4 text-sm font-medium text-red-600 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Page Content (Initially hidden, will be rendered by JS) -->
+        <section id="dashboard-page" class="hidden py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-gray-800 mb-10">Welcome, <span id="dashboard-username" class="text-indigo-600">Student!</span></h2>
+
+                <!-- Continue Learning Section -->
+                <div class="bg-white rounded-xl shadow-lg p-8 mb-10">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-play-circle text-indigo-500 mr-3"></i>Continue Learning
+                    </h3>
+                    <div id="continue-learning-card" class="bg-gray-50 p-6 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-between">
+                        <div class="md:w-3/4 mb-4 md:mb-0">
+                            <h4 class="text-xl font-semibold text-gray-900 mb-2">Resume: Introduction to JavaScript</h4>
+                            <p class="text-gray-600 mb-3">Course: Complete Web Development Bootcamp</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                                <div class="bg-green-500 h-2.5 rounded-full" style="width: 60%"></div>
+                            </div>
+                            <p class="text-sm text-gray-500">60% Complete - Last watched 2 days ago</p>
+                        </div>
+                        <div class="md:w-1/4 flex justify-end">
+                            <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-all-ease">
+                                Resume Lesson <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="no-continue-learning" class="hidden text-center text-gray-600 py-8">
+                        <p class="text-lg mb-4">Looks like you haven't started any lessons yet or completed all! ✨</p>
+                        <a href="#featured-courses" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-all-ease">
+                            Discover Courses <i class="fas fa-search ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Enrolled Courses Section -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-book-open text-green-500 mr-3"></i>My Enrolled Courses
+                    </h3>
+                    <div id="enrolled-courses-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Enrolled Course Card 1 -->
+                        <div class="bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition-all-ease p-5 flex items-center space-x-4">
+                            <img src="https://placehold.co/100x80/E0F2F7/334155?text=Web+Dev" alt="Web Development" class="w-24 h-20 object-cover rounded-md">
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">Complete Web Development Bootcamp</h4>
+                                <p class="text-gray-600 text-sm mb-2">Progress: 60%</p>
+                                <a href="#" class="text-indigo-600 hover:underline text-sm font-medium">Go to Course <i class="fas fa-arrow-right text-xs"></i></a>
+                            </div>
+                        </div>
+                        <!-- Enrolled Course Card 2 -->
+                        <div class="bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition-all-ease p-5 flex items-center space-x-4">
+                            <img src="https://placehold.co/100x80/E0F2F7/334155?text=Data+Sci" alt="Data Science" class="w-24 h-20 object-cover rounded-md">
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">Introduction to Data Science with Python</h4>
+                                <p class="text-gray-600 text-sm mb-2">Progress: 25%</p>
+                                <a href="#" class="text-indigo-600 hover:underline text-sm font-medium">Go to Course <i class="fas fa-arrow-right text-xs"></i></a>
+                            </div>
+                        </div>
+                        <div id="no-enrolled-courses" class="hidden text-center text-gray-600 py-8 col-span-full">
+                            <p class="text-lg mb-4">You haven't enrolled in any courses yet. Start your learning journey! 🚀</p>
+                            <a href="#featured-courses" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-full shadow-md transition-all-ease">
+                                Find Courses <i class="fas fa-search ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-2xl font-bold text-indigo-400">LearnFlow</h3>
+                    <p class="text-gray-400 text-sm mt-2">Your journey to knowledge starts here.</p>
+                </div>
+                <nav class="flex flex-wrap justify-center space-x-6 md:space-x-8">
+                    <a href="#" class="text-gray-300 hover:text-white transition-all-ease">Privacy Policy</a>
+                </nav>
+            </div>
+            <hr class="border-gray-700 my-6">
+            <p class="text-gray-500 text-sm">&copy; <span id="current-year"></span> LearnFlow. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentYear = new Date().getFullYear();
+            document.getElementById('current-year').textContent = currentYear;
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mainContent = document.getElementById('main-content');
+
+            // Get references to page sections
+            const homePage = document.getElementById('home-page');
+            const loginPage = document.getElementById('login-page');
+            const registerPage = document.getElementById('register-page');
+            const dashboardPage = document.getElementById('dashboard-page');
+
+            // Get references to auth buttons
+            const loginButton = document.getElementById('login-button');
+            const registerButton = document.getElementById('register-button');
+            const userProfile = document.getElementById('user-profile');
+            const logoutButton = document.getElementById('logout-button');
+            const usernameDisplay = document.getElementById('username-display');
+            const dashboardUsername = document.getElementById('dashboard-username');
+
+            // Get references to login/register form elements
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const showRegisterFormLink = document.getElementById('show-register-form');
+            const showLoginFormLink = document.getElementById('show-login-form');
+            const loginMessage = document.getElementById('login-message');
+            const registerMessage = document.getElementById('register-message');
+
+            // Simulate user login state (replace with actual backend check)
+            let isLoggedIn = false; // Set to true to test logged-in state
+            let currentUsername = "Student"; // Placeholder username
+
+            // Function to update UI based on login status
+            function updateAuthUI() {
+                if (isLoggedIn) {
+                    loginButton.classList.add('hidden');
+                    registerButton.classList.add('hidden');
+                    userProfile.classList.remove('hidden');
+                    usernameDisplay.textContent = currentUsername;
+                    dashboardUsername.textContent = currentUsername;
+                } else {
+                    loginButton.classList.remove('hidden');
+                    registerButton.classList.remove('hidden');
+                    userProfile.classList.add('hidden');
+                }
+            }
+
+            // Function to show a specific page and hide others
+            function showPage(pageId) {
+                homePage.classList.add('hidden');
+                loginPage.classList.add('hidden');
+                registerPage.classList.add('hidden');
+                dashboardPage.classList.add('hidden');
+
+                document.getElementById(pageId).classList.remove('hidden');
+
+                // Adjust main content padding for login/register pages if they need to be vertically centered
+                if (pageId === 'login-page' || pageId === 'register-page') {
+                    mainContent.classList.add('flex', 'items-center', 'justify-center');
+                } else {
+                    mainContent.classList.remove('flex', 'items-center', 'justify-center');
+                }
+            }
+
+            // Handle initial page load
+            const path = window.location.pathname;
+            if (path.includes('login.html') || path.includes('register.html')) {
+                showPage('login-page'); // Default to login if directly accessed
+                if (path.includes('register.html')) {
+                    loginPage.classList.add('hidden');
+                    registerPage.classList.remove('hidden');
+                }
+            } else if (path.includes('dashboard.html')) {
+                 // In a real app, you'd check auth before showing dashboard
+                if (isLoggedIn) {
+                    showPage('dashboard-page');
+                } else {
+                    // Redirect to login if not authenticated
+                    window.location.href = 'login.html';
+                }
+            } else {
+                showPage('home-page');
+            }
+
+
+            // Event Listeners for Navigation
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Handle clicks on header navigation links
+            document.querySelectorAll('header nav a, footer nav a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Only handle hash links for now, full page navigation will use href
+                    if (link.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href').substring(1);
+                        const targetSection = document.getElementById(targetId);
+                        if (targetSection) {
+                            targetSection.scrollIntoView({ behavior: 'smooth' });
+                            // Hide mobile menu after clicking a link
+                            mobileMenu.classList.add('hidden');
+                        }
+                    } else if (link.getAttribute('href').endsWith('.html')) {
+                        // This handles actual page navigation
+                        // In a real SPA (Single Page Application), you'd preventDefault and load content dynamically
+                    }
+                });
+            });
+
+            // Login Form Submission (Simulated)
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                // Simulate API call
+                if (email === "student@example.com" && password === "password123") {
+                    isLoggedIn = true;
+                    currentUsername = "Test Student"; // Set a username
+                    updateAuthUI();
+                    loginMessage.classList.add('hidden');
+                    alertModal("Login Successful!", "Welcome back to LearnFlow!", "success"); // Use custom modal
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000); // Redirect to dashboard
+                } else {
+                    loginMessage.textContent = "Invalid email or password.";
+                    loginMessage.classList.remove('hidden');
+                    alertModal("Login Failed", "Invalid email or password.", "error"); // Use custom modal
+                }
+            });
+
+            // Register Form Submission (Simulated)
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = document.getElementById('register-username').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+
+                if (password !== confirmPassword) {
+                    registerMessage.textContent = "Passwords do not match.";
+                    registerMessage.classList.remove('hidden');
+                    alertModal("Registration Failed", "Passwords do not match.", "error"); // Use custom modal
+                    return;
+                }
+
+                // Simulate API call
+                if (email && password && username) {
+                    // In a real app, send data to backend to create user
+                    isLoggedIn = true;
+                    currentUsername = username; // Set new user's username
+                    updateAuthUI();
+                    registerMessage.classList.add('hidden');
+                    alertModal("Registration Successful!", "Welcome to LearnFlow! You are now logged in.", "success"); // Use custom modal
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000); // Redirect to dashboard
+                } else {
+                    registerMessage.textContent = "Please fill in all fields.";
+                    registerMessage.classList.remove('hidden');
+                    alertModal("Registration Failed", "Please fill in all fields.", "error"); // Use custom modal
+                }
+            });
+
+            // Toggle between login and register forms
+            if (showRegisterFormLink) {
+                showRegisterFormLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginPage.classList.add('hidden');
+                    registerPage.classList.remove('hidden');
+                });
+            }
+            if (showLoginFormLink) {
+                showLoginFormLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    registerPage.classList.add('hidden');
+                    loginPage.classList.remove('hidden');
+                });
+            }
+
+            // Logout (Simulated)
+            if (logoutButton) {
+                logoutButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    isLoggedIn = false;
+                    currentUsername = "";
+                    updateAuthUI();
+                    alertModal("Logged Out", "You have been successfully logged out.", "info"); // Use custom modal
+                    setTimeout(() => { window.location.href = 'index.html'; }, 500); // Redirect to home
+                });
+            }
+
+            // Initial UI update on load
+            updateAuthUI();
+
+            // Custom Alert/Confirmation Modal (instead of alert/confirm)
+            function alertModal(title, message, type = "info") {
+                // Remove existing modal if any
+                const existingModal = document.getElementById('custom-alert-modal');
+                if (existingModal) {
+                    existingModal.remove();
+                }
+
+                const modalHTML = `
+                    <div id="custom-alert-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-auto transform scale-95 opacity-0 transition-all-ease" style="animation: bounceIn 0.3s forwards;">
+                            <div class="flex justify-between items-center pb-3">
+                                <h3 class="text-xl font-bold text-gray-800">${title}</h3>
+                                <button id="close-alert-modal" class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
+                            </div>
+                            <div class="text-gray-700 text-center py-4">
+                                <p>${message}</p>
+                            </div>
+                            <div class="flex justify-center pt-4">
+                                <button id="ok-alert-modal" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-full transition-all-ease">
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+                const modal = document.getElementById('custom-alert-modal');
+                const modalContent = modal.querySelector('.transform');
+
+                setTimeout(() => {
+                    modalContent.style.opacity = '1';
+                    modalContent.style.transform = 'scale(1)';
+                }, 10); // Small delay to allow CSS transition
+
+                document.getElementById('close-alert-modal').addEventListener('click', () => modal.remove());
+                document.getElementById('ok-alert-modal').addEventListener('click', () => modal.remove());
+
+                // Optional: Add specific styling based on type (success, error, info)
+                if (type === "success") {
+                    modalContent.querySelector('h3').classList.add('text-green-600');
+                    modalContent.querySelector('#ok-alert-modal').classList.replace('bg-indigo-600', 'bg-green-600');
+                    modalContent.querySelector('#ok-alert-modal').classList.replace('hover:bg-indigo-700', 'hover:bg-green-700');
+                } else if (type === "error") {
+                    modalContent.querySelector('h3').classList.add('text-red-600');
+                    modalContent.querySelector('#ok-alert-modal').classList.replace('bg-indigo-600', 'bg-red-600');
+                    modalContent.querySelector('#ok-alert-modal').classList.replace('hover:bg-indigo-700', 'hover:bg-red-700');
+                }
+            }
+
+            // Animation keyframes for elements
+            const styleSheet = document.createElement("style");
+            styleSheet.type = "text/css";
+            styleSheet.innerText = `
+                @keyframes fade-in-up {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes fade-in {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes bounceIn {
+                    0% { transform: scale(0.8); opacity: 0; }
+                    60% { transform: scale(1.05); opacity: 1; }
+                    100% { transform: scale(1); }
+                }
+                .animate-fade-in-up {
+                    animation: fade-in-up 0.8s ease-out forwards;
+                }
+                .animate-fade-in {
+                    animation: fade-in 1.2s ease-out forwards;
+                }
+                .animate-bounce-in {
+                    animation: bounceIn 0.5s ease-out forwards;
+                }
+            `;
+            document.head.appendChild(styleSheet);
+        });
+    </script>
+</body>
+</html>
